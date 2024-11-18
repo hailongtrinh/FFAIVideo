@@ -32,7 +32,7 @@ const generateVideo = async (
   } = config;
 
   Root.currentConfig = config;
-  videoScript = normalizeWhitespace(addPunctuationToParagraph(videoScript));
+  //videoScript = normalizeWhitespace(addPunctuationToParagraph(videoScript));
   if (addPunctuation) {
     videoScript = await addPunctuationWithAI(videoScript, config);
   }
@@ -85,13 +85,15 @@ const generateVideo = async (
     Logger.warn('subtitle file not found, fallback to whisper');
   }
 
+ 
+
   const subtitleLines = fileToSubtitles(subtitleFile);
   if (!subtitleLines) {
     Logger.warn(`subtitle file is invalid: ${subtitleFile}`);
     subtitleFile = '';
   }
   progress(40);
-
+  
   const downloadedVideos: string[] = await downloadVideos(
     videoTerms,
     videoDuration,

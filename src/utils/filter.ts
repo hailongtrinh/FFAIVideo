@@ -14,8 +14,9 @@ export function createSubtitlesFilter(
     strokeWidth,
     textBottom,
   } = options;
-  let filter = `subtitles=${subtitleFile}`;
 
+  const subtitleFileString = subtitleFile.replace(/\\/g, "/").replace(/:/g, "\\:")
+  let filter = `subtitles='${subtitleFileString}'`;
   if (fontsDir || fontName) {
     const str = convertFiltersToString({
       fontsdir: fontsDir,

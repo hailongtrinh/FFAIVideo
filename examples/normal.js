@@ -33,11 +33,13 @@ generateVideo(
       // Register at https://www.pexels.com/api/ to get your API key.
       apiKey: 'cuXVffUOm1A5ZSkvdrhJVd4wsgqgelD8EBOsgFNe8koKkGoncRJuE9z2',
     },
-    videoScript: `意大利，这个位于欧洲南部的国家，以其丰富的历史、文化和美食而闻名于世。古罗马帝国的辉煌在这里留下了深刻的印记，古罗马竞技场、斗兽场和无数历史遗迹都诉说着过去的荣耀。这里还是文艺复兴的发源地，佛罗伦萨、威尼斯、罗马等城市充满了艺术的气息，无数大师的作品令人叹为观止。
-
-    除了历史和艺术，意大利还是美食的天堂。披萨、意面、提拉米苏等美食都是意大利的代表性佳肴，令人垂涎欲滴。漫步在意大利的街头巷尾，你会被浓郁的咖啡香和面包的烘焙香所吸引，每一口都是对味蕾的极致享受。
-    
-    总之，意大利是一个充满魅力的国家，无论是历史的厚重、艺术的璀璨还是美食的诱惑，都让人流连忘返。
+    videoScript: `Tư duy làm chủ là gì ?
+Ngày xưa, trong một ngôi làng nhỏ, có một chàng trai tên An luôn mơ ước trở thành người giàu có. Nhưng mọi người xung quanh đều bảo rằng anh không thể làm được, vì gia đình anh vốn nghèo khó và không có tài sản gì quý giá.
+Một ngày nọ, An tình cờ gặp một nhà hiền triết đang đi ngang qua làng. Nhà hiền triết nghe An bộc bạch về ước mơ của mình, bèn cười và nói: “Ta sẽ kể cho cậu nghe câu chuyện về hạt giống của sự giàu có.”
+Nhà hiền triết nói: “Có một vị vua muốn chọn người thừa kế ngôi báu, nên trao cho ba hoàng tử ba hạt giống và nói rằng ai trồng được cây lớn nhất sẽ trở thành người kế vị. Ba hoàng tử mang hạt giống về trồng trong vườn riêng. Hai hoàng tử đầu, để cây nhanh lớn, đã dùng nhiều phân bón và cắt tỉa cây mỗi ngày. Nhưng khi đến mùa thu hoạch, cây của họ yếu ớt và dễ gãy.
+Còn hoàng tử thứ ba không chỉ chăm sóc cây mà còn nghiên cứu về loại đất, về cách tưới nước và đảm bảo cây phát triển tự nhiên nhất. Đến ngày quyết định, cây của hoàng tử thứ ba mạnh mẽ, tươi tốt hơn cả.”
+Nhà hiền triết quay sang An và nói, “Muốn thành công, đừng chỉ nghĩ đến kết quả nhanh chóng, mà hãy vun đắp từng ngày. Hãy coi mỗi hành động nhỏ là một hạt giống và chăm chỉ nuôi dưỡng nó. Cậu sẽ thấy ‘cây thành công’ của mình sẽ sớm lớn lên, vững vàng.”
+An ghi nhớ lời dạy đó, bắt đầu học hỏi từ những việc nhỏ, từng bước tiết kiệm, học cách kinh doanh và kết nối với mọi người. Nhiều năm sau, An trở thành một doanh nhân thành công và được người dân trong làng kính trọng. Anh hiểu rằng, làm chủ không chỉ là thành công nhanh chóng, mà là từng bước gieo hạt và kiên trì nuôi dưỡng chúng mỗi ngày.
   `,
   },
   progress => {

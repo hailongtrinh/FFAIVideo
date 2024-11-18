@@ -31,18 +31,22 @@ const generateSubtitle = async ({
   let scriptLines = cleanSentences(
     splitSubtitleByPunctuation(normalizeWhitespace(videoScript)),
   );
+  
   let startTime = -1.0;
   let endTime = -1.0;
   let scriptLinesIndex = 0;
   let subLine = '';
 
   let scriptLinesc;
+  
   if (lineSplit) {
     scriptLinesc = restructureScriptLines(subMaker, subtitleMaxWidth);
   } else {
     scriptLinesc = clone(scriptLines);
   }
-  // console.log(scriptLinesc);
+ 
+  console.log(scriptLinesc);
+  
 
   for (let i = 0; i < subMaker.offset.length; i++) {
     let [offset, sub] = [subMaker.offset[i], subMaker.subs[i]];
