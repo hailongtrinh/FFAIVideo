@@ -5,6 +5,13 @@ import { VideoAspect } from './constant';
 import { isFilePath } from '../utils/file';
 import { uuid } from '../utils/utils';
 
+interface MaterialInfo {
+  provider: string;
+  url: string;
+  keyword?: string;
+  duration: number;
+}
+
 interface AzureTTSSettings {
   subscriptionKey: string;
   serviceRegion: string;
@@ -71,7 +78,10 @@ interface VideoConfig {
   removeCache?: boolean;
   ttsProxy?: string;
 
-  materialFunc?: (param: SearchParams) => Promise<any[]>;
+  getMaterial?: (param: SearchParams) => Promise<any[]>;
+  postProcessMaterialVideos?: (
+    materialVideos: MaterialInfo[],
+  ) => MaterialInfo[];
   insertClips?: InsertClip[];
   [key: string]: any;
 }
@@ -144,6 +154,7 @@ const createOutputConfig = (config: VideoConfig): VideoConfig => {
 export {
   VideoConfig,
   LLMConfig,
+  MaterialInfo,
   AzureTTSSettings,
   MaterialSite,
   mergeConfig,

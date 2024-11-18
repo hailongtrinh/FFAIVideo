@@ -1,6 +1,6 @@
 import { clone } from 'lodash';
 import { SubMaker } from './sub-maker';
-import { formatter } from './utils/date';
+import { subtitleFormatter } from './utils/date';
 import { TINY_PUNCTUATIONS } from './config/constant';
 import {
   addLineBreaks,
@@ -70,7 +70,7 @@ const generateSubtitle = async ({
       } else {
         lineText = addLineBreaks(lineText, subtitleMaxWidth);
       }
-      const subtitle = formatter(
+      const subtitle = subtitleFormatter(
         scriptLinesIndex,
         startTime,
         endTime,

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { sample, sampleSize } from 'lodash';
 
 const PUNCTUATIONS: string[] = [
   '!',
@@ -65,8 +66,12 @@ const uuid = (length: number = -1): string => {
   return u;
 };
 
-const appequal = (a: number, b: number, c: number = 10) => {
-  return Math.abs(a - b) < c;
+const greater = (a: number, b: number) => {
+  return a >= b;
+};
+
+const less = (a: number, b: number) => {
+  return a < b;
 };
 
 const convertHexToAssColor = (hexColor: string): string => {
@@ -83,9 +88,30 @@ const convertHexToAssColor = (hexColor: string): string => {
   return assColor;
 };
 
+const insertTriplet = (arr: any[], a: any, b: any, c: any) => {
+  const n = arr.length / 3;
+  arr.splice(n * 1, 0, a);
+  arr.splice(n * 2 + 1, 0, b);
+  arr.splice(n * 3 + 2, 0, c);
+  return arr;
+};
+
+const getSampleItems = (items: any[], count: number) => {
+  if (items.length === 0) return items;
+
+  let randoms = sampleSize(items, count);
+  while (randoms.length < count) {
+    randoms = randoms.concat(sample(items));
+  }
+  return randoms.slice(0, count);
+};
+
 export {
   uuid,
-  appequal,
+  less,
+  greater,
+  insertTriplet,
+  getSampleItems,
   getEnumKeyByValue,
   strContainsPunctuation,
   convertHexToAssColor,

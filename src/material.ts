@@ -2,25 +2,18 @@ import fs from 'fs-extra';
 import md5 from 'md5';
 import path from 'path';
 import axios from 'axios';
-import { isEmpty, sample } from 'lodash';
+import { isEmpty } from 'lodash';
 import { VideoAspect } from './config/constant';
-import { VideoConfig } from './config/config';
+import { VideoConfig, MaterialInfo } from './config/config';
 import { toResolution } from './config/video-aspect';
 import { getEnumKeyByValue } from './utils/utils';
 import { writeFileWithStream, copyLocalFile } from './utils/file';
-import { appequal } from './utils/utils';
+import { less } from './utils/utils';
 import { httpGet, buildApiUrl } from './utils/http';
 import { toJson } from './utils/json';
 import { Logger } from './utils/log';
-import { uuid } from './utils/utils';
+import { uuid, insertTriplet, getSampleItems } from './utils/utils';
 import { isNetUrl } from './utils/http';
-
-interface MaterialInfo {
-  provider: string;
-  url: string;
-  keyword?: string;
-  duration: number;
-}
 
 const searchVideos = async (
   searchTerm: string,
@@ -32,8 +25,8 @@ const searchVideos = async (
   const [videoWidth, videoHeight] = toResolution(videoAspect);
   const searchData = {
     query: searchTerm,
-    per_page: '15',
-    orientation: videoOrientation,
+    per_page: '20',
+    orientation: videoOrientation.toLocaleLowerCase(),
   };
   const queryUrl = `https://api.pexels.com/videos/search`;
   const data = await httpGet(
@@ -56,20 +49,27 @@ const searchVideos = async (
     }
 
     const videoFiles = video['video_files'];
+    let minWidth = 99999;
+    let minHeight = 99999;
+    let selectedItem = null;
     for (const file of videoFiles) {
       const w = parseInt(file['width']);
       const h = parseInt(file['height']);
-      const n = 10;
-      if (appequal(w, videoWidth, n) && appequal(h, videoHeight, n)) {
-        const item: MaterialInfo = {
+      if (less(w, videoWidth) || less(h, videoHeight)) continue;
+      if (w < minWidth || h < minHeight) {
+        minWidth = w;
+        minHeight = h;
+        selectedItem = {
           provider: 'pexels',
           keyword: searchTerm,
           url: file['link'],
           duration: duration,
         };
-        videoItems.push(item);
-        break;
       }
+    }
+
+    if (selectedItem) {
+      videoItems.push(selectedItem);
     }
   }
   return videoItems;
@@ -110,13 +110,13 @@ const downloadVideos = async (
   config: VideoConfig,
   progress: (progress: number) => void,
 ): Promise<string[]> => {
-  const { videoClipDuration: maxClipDuration = 5 } = config;
-  let validVideoItems: MaterialInfo[] = [];
+  const { videoClipDuration: maxClipDuration = 10 } = config;
+  let materialVideos: MaterialInfo[] = [];
 
   for (const [index, searchTerm] of searchTerms.entries()) {
     let videoItems = [];
-    if (config.materialFunc) {
-      videoItems = await config.materialFunc({
+    if (config.getMaterial) {
+      videoItems = await config.getMaterial({
         searchTerm,
         index,
         maxClipDuration,
@@ -130,16 +130,19 @@ const downloadVideos = async (
     }
 
     if (videoItems.length > 0) {
-      const randomItem = sample(videoItems);
-      validVideoItems.push(randomItem);
+      const [a, b, c] = getSampleItems(videoItems, 3);
+      materialVideos = insertTriplet(materialVideos, a, b, c);
     }
   }
-  validVideoItems = validVideoItems.concat(validVideoItems);
 
+  if (config.postProcessMaterialVideos) {
+    materialVideos = config.postProcessMaterialVideos(materialVideos);
+  }
+  
   const videoPaths: string[] = [];
   let totalDuration = 0.0;
   let index = 0;
-  for (const item of validVideoItems) {
+  for (const item of materialVideos) {
     try {
       index++;
       let savedVideoPath;
@@ -149,7 +152,7 @@ const downloadVideos = async (
         savedVideoPath = await copyLocalFile(item.url, cacheDir);
       }
 
-      progress(40 + Math.floor((index * 45) / validVideoItems.length));
+      progress(40 + Math.floor((index * 45) / materialVideos.length));
       if (savedVideoPath) {
         videoPaths.push(savedVideoPath);
         const seconds = Math.min(maxClipDuration, item.duration);
