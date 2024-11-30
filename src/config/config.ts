@@ -38,6 +38,15 @@ interface SearchParams {
   cacheDir?: string;
 }
 
+// ISubMaker.ts
+export interface ISubMaker {
+  offset: [number, number][];
+  subs: string[];
+
+  createSub(timestamp: [number, number], text: string): void;
+  generateSubs(wordsInCue?: number): string;
+}
+
 interface VideoConfig {
   taskId?: string;
   provider?: string;
@@ -64,6 +73,7 @@ interface VideoConfig {
   azureTTSSettings?: AzureTTSSettings;
   lineSplit?: boolean;
   addPunctuation?: boolean;
+  perPage?: number;
 
   fontsDir?: string;
   fontSize?: number;
@@ -77,8 +87,19 @@ interface VideoConfig {
   lastTime?: number;
   removeCache?: boolean;
   ttsProxy?: string;
+  materialAspectRatio?: boolean;
 
   getMaterial?: (param: SearchParams) => Promise<any[]>;
+  getTTS?: (
+    text: string,
+    voiceName: string,
+    voiceFile: string,
+  ) => Promise<Promise<ISubMaker | null>>;
+  preProcessMaterialVideo?: (
+    queryUrl: string,
+    searchData: Record<string, any>,
+    pexelsApiKey: MaterialSite,
+  ) => Promise<MaterialInfo[]>;
   postProcessMaterialVideos?: (
     materialVideos: MaterialInfo[],
   ) => MaterialInfo[];
@@ -104,6 +125,7 @@ const defalutVideoConfig: VideoConfig = {
   addPunctuation: false,
   termsNum: 5,
   subtitleMaxWidth: 9999,
+  materialAspectRatio: true,
   lastTime: 5,
   voiceName: 'zh-CN-XiaoxiaoNeural',
   videoAspect: VideoAspect.Portrait,
@@ -115,6 +137,7 @@ const defalutVideoConfig: VideoConfig = {
   fontSize: 24,
   strokeColor: '#000000',
   strokeWidth: 1,
+  perPage: 20,
   removeCache: true,
 };
 
