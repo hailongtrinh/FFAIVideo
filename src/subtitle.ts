@@ -47,8 +47,34 @@ const generateSubtitle = async ({
       scriptLines,
     });
   } else {
-    scriptLinesc = clone(scriptLines);
+
+    if(lineBreakForce){
+      const newScriptLines = [];
+      for(let cLine of scriptLines){
+        if(cLine.length > subtitleMaxWidth){
+        const words = cLine.split(' ');
+        let currentLine = '';
+        for (const word of words) {
+          if ((currentLine + word).length <= subtitleMaxWidth) {
+            currentLine += word + ' ';
+          } else {
+            newScriptLines.push(currentLine.trim());
+            currentLine = word + ' ';
+          }
+        }
+        if (currentLine.trim().length > 0) {
+          newScriptLines.push(currentLine.trim());
+        }
+        }else{
+          newScriptLines.push(cLine)
+        }
+      }
+      scriptLinesc = newScriptLines
+    }else{
+      scriptLinesc = clone(scriptLines);
+    }
   }
+  
 
   for (let i = 0; i < subMaker.offset.length; i++) {
     let [offset, sub] = [subMaker.offset[i], subMaker.subs[i]];

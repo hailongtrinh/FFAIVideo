@@ -22,7 +22,8 @@ generateVideo(
     }, */
     fontSize : 9,
     textBottom: 80,
-    lineSplit: true,
+    isChinese: false,
+    lineBreakForce: true,
     removeCache: false,
     videoScript: `Hạ Anh luôn là một cô gái kiên cường, nhưng bên trong cô lại chứa đựng một nỗi sợ rất lớn: sợ thất bại. Từ nhỏ, cô luôn cố gắng làm mọi thứ thật hoàn hảo, vì sợ rằng nếu mình làm sai, người khác sẽ đánh giá và không còn yêu quý mình nữa. Điều này khiến cô luôn cảm thấy mình không đủ tốt, dù thực tế cô đã rất nỗ lực.
 
@@ -37,7 +38,7 @@ Ngày hôm đó, khi đứng trước khán giả, những lời đầu tiên c�
 Nhìn lại, Hạ Anh nhận ra một điều quan trọng: nỗi sợ chỉ là thứ cản bước bạn nếu bạn để nó điều khiển. Khi bạn đối diện và bước qua nó, bạn sẽ nhận ra sức mạnh thực sự bên trong mình. Và từ đó, mỗi lần đối mặt với thử thách, Hạ Anh không còn sợ hãi nữa, bởi cô đã học cách chiến thắng nỗi sợ lớn nhất: chính là bản thân mình.
 
 Câu chuyện này nhấn mạnh rằng đôi khi, nỗi sợ lớn nhất của chúng ta là những suy nghĩ tự giới hạn trong chính đầu óc mình, và chỉ khi dám đối diện và vượt qua, chúng ta mới có thể thực sự phát huy tiềm năng của mình.`,
-    videoTerms: [
+   videoTerms: [
       'Russia Ukraine conflict',
       'Military conflict',
       'Donald Trump',
