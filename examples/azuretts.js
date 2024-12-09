@@ -8,14 +8,14 @@ generateVideo(
     termsNum: 6,
     subtitleMaxWidth: 9,
     videoClipDuration: 10,
-    lineSplit: false,
+    lineSplit: true,
     voiceName: 'zh-CN-XiaoxiaoNeural',
     bgMusic: path.join(__dirname, './assets/songs/m3.mp3'),
     output: path.join(__dirname, './output'),
     // https://azure.microsoft.com/en-us/products/ai-services/ai-speech
     // https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account?icid=AI-Speech-Hero
     azureTTSSettings: {
-      subscriptionKey: 'your azure key',
+      subscriptionKey: 'Bq5zO8jE5yNCMPiMmht16yUo7IM9oI2BQZ8fvwNCEbUnQDxqpcgjJQQJ99AJACqBBLyXJ3w3AAAYACOGMKuS',
       serviceRegion: 'southeastasia',
     },
     removeCache: false,

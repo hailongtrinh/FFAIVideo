@@ -8,7 +8,7 @@ import { generateTermsWithAI, addPunctuationWithAI } from './terms';
 import { combineFinalVideo } from './video';
 import { fileToSubtitles } from './sub-maker';
 import { generateSubtitle } from './subtitle';
-import { downloadVideos, copyClipToCache } from './material';
+import { downloadVideos, copyClipToCache, handleLocalSources } from './material';
 import { tts, getAudioDuration, parseVoiceName } from './voice';
 import { addPunctuationToParagraph, normalizeWhitespace } from './utils/line';
 import { Logger } from './utils/log';
@@ -30,6 +30,7 @@ const generateVideo = async (
     lineSplit = true,
     addPunctuation = false,
     subtitleMaxWidth = 9999,
+    localSources = false
   } = config;
 
   Root.currentConfig = config;
@@ -69,12 +70,15 @@ const generateVideo = async (
 
   // Generate voiceover by tts engine.
   const audioFile = path.join(cacheDir, 'audio.mp3');
+  
   const subMaker = await tts(videoScript, voiceName, audioFile, config);
+  
   if (!subMaker) return '';
   progress(30);
 
   // Generate subtitles based on audio and text
   const videoDuration = Math.ceil(getAudioDuration(subMaker) + lastTime);
+
   let subtitleFile = path.join(cacheDir, 'subtitle.srt');
   await generateSubtitle({
     subMaker,
@@ -87,22 +91,36 @@ const generateVideo = async (
     Logger.warn('subtitle file not found, fallback to whisper');
   }
 
- 
-
   const subtitleLines = fileToSubtitles(subtitleFile);
   if (!subtitleLines) {
     Logger.warn(`subtitle file is invalid: ${subtitleFile}`);
     subtitleFile = '';
   }
   progress(40);
+  let downloadedVideos: string[] = [];
+  if(localSources && isArray(localSources)){
+
+    downloadedVideos = await handleLocalSources(
+      localSources,
+      videoDuration,
+      cacheDir,
+      config,
+      progress
+    );
+  }else{
+
+    downloadedVideos = await downloadVideos(
+      videoTerms,
+      videoDuration,
+      cacheDir,
+      config,
+      progress,
+    );
+
+  }
+
+  console.log('downloadedVideos', downloadedVideos);
   
-  const downloadedVideos: string[] = await downloadVideos(
-    videoTerms,
-    videoDuration,
-    cacheDir,
-    config,
-    progress,
-  );
 
   if (isEmpty(downloadedVideos)) {
     Logger.error(

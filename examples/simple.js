@@ -5,35 +5,26 @@ Logger.enabled = true;
 generateVideo(
   {
     provider: 'gpt4js',
-    termsNum: 6,
+    termsNum: 8,
     subtitleMaxWidth: 9,
     videoClipDuration: 10,
     //ttsProxy: 'http:127.0.0.1:1080',
-    voiceName: 'vi-VN-NamMinhNeural',
+    voiceName: 'zh-CN-XiaoxiaoNeural',
     bgMusic: path.join(__dirname, './assets/songs/m3.mp3'),
     output: path.join(__dirname, './output'),
-    lineSplit : false,
     pexels: {
       // Register at https://www.pexels.com/api/ to get your API key.
-      apiKey: 'tmLrkxFipcPRz5BCCaKgOT8HOFsMsMWJ7Dyn3fCLZI73BoECbx7NB2Tq',
+      apiKey: 'cuXVffUOm1A5ZSkvdrhJVd4wsgqgelD8EBOsgFNe8koKkGoncRJuE9z2',
     },
-   azureTTSSettings: {
-      subscriptionKey: 'Bq5zO8jE5yNCMPiMmht16yUo7IM9oI2BQZ8fvwNCEbUnQDxqpcgjJQQJ99AJACqBBLyXJ3w3AAAYACOGMKuS',
-      serviceRegion: 'southeastasia',
-    },
-    videoScript: `Cuộc xung đột Nga-Ukraine đang bước vào giai đoạn then chốt trong mùa Đông - Xuân này. Các quan chức Ukraine cho biết, 4-5 tháng tới sẽ quyết định lập trường của cả hai bên trong các cuộc đàm phán hòa bình. Đặc biệt, sự trở lại Nhà Trắng của Donald Trump khiến Ukraine phải tính toán lại chiến lược vì lo ngại gia nhập NATO sẽ khó khăn hơn, và viện trợ quân sự có thể bị giảm.
-Trong khi đó, Nga tiếp tục chỉ trích NATO phá hoại an ninh châu Âu bằng cách mở rộng quân sự và cung cấp vũ khí cho Ukraine. Phái viên Nga tại OSCE, ông Alexander Lukashevich, khẳng định an ninh cần được đảm bảo cho tất cả, không chỉ một phía.
-Các chuyên gia phân tích rằng phe 'diều hâu' trong NATO có thể cố kéo dài xung đột trong những tháng cuối nhiệm kỳ của Tổng thống Biden, gây khó khăn cho chính sách đối ngoại của Trump nếu ông trở lại. Liệu giai đoạn mùa Đông này sẽ đem lại cơ hội hòa bình, hay tiếp tục leo thang căng thẳng? Hãy cùng theo dõi
-    `,
-    videoTerms: [
-      'Russia Ukraine conflict',
-      'Military conflict',
-      'Donald Trump',
-      'Winter spring conflict',
-      'Cold war Europe',
-      'Alexander Lukashevich',
-      'Tổng thống Biden',
-    ]
+    videoScript: `法国大餐，作为一种世界闻名的烹饪艺术，以其精致的摆盘、丰富的口感和深厚的文化底蕴，吸引着无数食客。
+
+  走进一家法式餐厅，首先映入眼帘的是典雅的装饰和柔和的灯光，营造出一种浪漫而宁静的氛围。在这样的环境中，享用一顿法国大餐，无疑是一种极致的享受。
+  
+  法国大餐的菜品丰富多样，从开胃菜到主菜，再到甜点，每一道都经过精心烹饪。前菜通常以清爽的沙拉或鲜美的海鲜为主，为接下来的大餐做好准备。主菜则是法式大餐的精髓，常见的有牛排、鹅肝、蜗牛等，这些食材在厨师的巧手下，被烹饪得鲜嫩多汁、口感丰富。甜点则是法国大餐的完美收尾，无论是精致的马卡龙还是香甜的焦糖布丁，都能让人回味无穷。
+  
+  除了美味的菜品，法国大餐还注重用餐礼仪。从餐具的摆放到用餐的顺序，都遵循着一定的规范。在这样的氛围中用餐，不仅能品尝到美食，还能感受到一种文化的熏陶。
+  
+  总之，法国大餐是一种独特的餐饮体验，它不仅仅是一顿饭，更是一种文化的传承和展现。`,
   },
   progress => {
     console.log(progress);

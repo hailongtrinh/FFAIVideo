@@ -14,7 +14,7 @@ export function createSubtitlesFilter(
     strokeWidth,
     textBottom,
   } = options;
-
+  
   const subtitleFileString = subtitleFile.replace(/\\/g, "/").replace(/:/g, "\\:")
   let filter = `subtitles='${subtitleFileString}'`;
   if (fontsDir || fontName) {
@@ -28,9 +28,16 @@ export function createSubtitlesFilter(
       y: textBottom,
       wrapStyle: 1,
     });
+    console.log('str',str);
+    
     filter += `:${str}`;
   } else {
     const str = convertFiltersToString({
+      fontsize: fontSize,
+      fontcolor: convertHexToAssColor(textColor || ''),
+      bordercolor: convertHexToAssColor(strokeColor || ''),
+      borderw: strokeWidth,
+      y: textBottom,
       wrapStyle: 1,
     });
     filter += `:${str}`;
@@ -52,6 +59,8 @@ function convertFiltersToString(filterObj: Record<string, any>): string {
     y,
   } = filterObj;
 
+  
+
   const filterMap: Record<string, string> = {
     FontName: fontname,
     FontSize: fontsize,
@@ -62,7 +71,7 @@ function convertFiltersToString(filterObj: Record<string, any>): string {
     WrapStyle: wrapStyle,
     MarginV: y,
   };
-
+  
   const filterParams = Object.entries(filterMap)
     .filter(([_, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)

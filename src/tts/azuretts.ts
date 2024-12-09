@@ -24,11 +24,12 @@ const azureTTS = async (
     speechConfig.speechSynthesisVoiceName = voiceName;
     speechConfig.speechSynthesisOutputFormat =
       sdk.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
-
+    
     // Create the speech synthesizer
     const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
 
     synthesizer.synthesisCompleted = (s, e) => {
+      
       Logger.log(
         `(synthesized) Reason: ${
           sdk.ResultReason[e.result.reason]
@@ -37,7 +38,7 @@ const azureTTS = async (
     };
 
     synthesizer.synthesisStarted = () => {
-      // Logger.log('(synthesis started)');
+      Logger.log('(synthesis started)');
     };
 
     synthesizer.wordBoundary = (s, e) => {

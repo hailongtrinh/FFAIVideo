@@ -20,14 +20,18 @@ const isLineEqual = (lineText: string, subLine: string): boolean => {
 // const subLine = "This is a test!";
 // output: "This is a test"
 const getEqualedLine = (targetLine: string, subLine: string): string => {
-  if (subLine === targetLine) {
+  if (subLine.trim() === targetLine.trim()) {
     return targetLine.trim();
   }
-
+ 
   const cleanedSubLine = removeSpecialCharacters(subLine);
   const cleanedTargetLine = removeSpecialCharacters(targetLine);
-  if (cleanedSubLine === cleanedTargetLine) {
-    return cleanedTargetLine;
+  
+  const normalizedSubLine = cleanedSubLine.replace(/\s+/g, '');
+  const normalizedTargetLine = cleanedTargetLine.replace(/\s+/g, '');
+  
+  if (normalizedSubLine === normalizedTargetLine) { 
+    return cleanedTargetLine.trim();
   }
   return '';
 };
@@ -38,16 +42,24 @@ const splitSubtitleByPunctuation = (
   s: string,
   maxWidth: number = 9999,
 ): string[] => {
+  
   const result: string[] = [];
   let txt = '';
+  let count = 0;
   for (const char of s) {
+    count++;
     if (!PUNCTUATIONS.includes(char) && txt.length < maxWidth) {
       txt += char;
+      if(count === s.length){
+        result.push(txt.replace(/[\s\u3000]+/g, ' ').trim());
+      }
+      
     } else {
       result.push(txt.replace(/[\s\u3000]+/g, ' ').trim());
       txt = '';
     }
   }
+  
   return result;
 };
 

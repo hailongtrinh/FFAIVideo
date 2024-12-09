@@ -56,14 +56,20 @@ const removeBlankLines = (text: string) => {
 };
 
 const addLineBreaks = (lineText: string, subtitleMaxWidth: number) => {
+  const words = lineText.split(' ');
   let result = '';
-  for (let i = 0; i < lineText.length; i += subtitleMaxWidth) {
-    if (i + subtitleMaxWidth < lineText.length) {
-      result += lineText.slice(i, i + subtitleMaxWidth) + '\\N';
+  let currentLine = '';
+
+  for (const word of words) {
+    if ((currentLine + word).length > subtitleMaxWidth) {
+      result += currentLine.trim() + '\\N';
+      currentLine = word + ' ';
     } else {
-      result += lineText.slice(i, i + subtitleMaxWidth);
+      currentLine += word + ' ';
     }
   }
+
+  result += currentLine.trim();
   return result;
 };
 

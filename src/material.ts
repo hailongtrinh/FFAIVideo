@@ -14,6 +14,7 @@ import { toJson } from './utils/json';
 import { Logger } from './utils/log';
 import { uuid, insertTriplet, getSampleItems } from './utils/utils';
 import { isNetUrl } from './utils/http';
+import ffmpeg from 'fluent-ffmpeg';
 
 const searchVideos = async (
   searchTerm: string,
@@ -123,6 +124,76 @@ const saveVideo = async (
   return '';
 };
 
+
+const getVideoDurationInSeconds = async (videoPath: string): Promise<number> => {
+  return new Promise((resolve) => {
+    ffmpeg.ffprobe(videoPath, (err, metadata) => {
+      if (err) {
+        resolve(0);
+      } else {
+        resolve(metadata.format.duration ?? 0);
+      }
+    });
+  });
+};
+
+const handleLocalSources = async (
+  localPaths: string[],
+  videoDuration: number = 0.0,
+  cacheDir: string,
+  config: VideoConfig,
+  progress: (progress: number) => void,
+): Promise<string[]> => {
+  const videoPaths: string[] = [];
+  let totalDuration = 0.0;
+  const allFiles: string[] = [];
+
+  for (const localPath of localPaths) {
+    const files = fs.readdirSync(localPath).filter(file => file.endsWith('.mp4'));
+    allFiles.push(...files.map(file => path.join(localPath, file)));
+  }
+
+  let shuffledFiles = allFiles.sort(() => 0.5 - Math.random());
+
+  while (totalDuration < videoDuration) {
+    for (const filePath of shuffledFiles) {
+      const duration = await getVideoDurationInSeconds(filePath);
+      if (duration > 10) {
+        const startTime = Math.floor(Math.random() * (duration - 10));
+        const videoId = `vid-${uuid().substring(0, 8)}`;
+        const newPath = path.join(cacheDir, `${videoId}.mp4`);
+
+        await new Promise((resolve, reject) => {
+          ffmpeg(filePath)
+            .setStartTime(startTime)
+            .setDuration(10)
+            .output(newPath)
+            .on('end', resolve)
+            .on('error', reject)
+            .run();
+        });
+
+        videoPaths.push(newPath);
+        totalDuration += 10;
+      } else {
+        const videoId = `vid-${uuid().substring(0, 8)}`;
+        const newPath = path.join(cacheDir, `${videoId}.mp4`);
+        await fs.copy(filePath, newPath);
+        videoPaths.push(newPath);
+        totalDuration += duration;
+      }
+
+      if (totalDuration > videoDuration) {
+        return videoPaths;
+      }
+    }
+    // Shuffle again if we need more videos
+    shuffledFiles = allFiles.sort(() => 0.5 - Math.random());
+  }
+
+  return videoPaths;
+};
+
 const downloadVideos = async (
   searchTerms: string[],
   videoDuration: number = 0.0,
@@ -229,4 +300,4 @@ const copyClipToCache = async (
   return { videoId, newPath };
 };
 
-export { downloadVideos, copyClipToCache };
+export { downloadVideos, copyClipToCache, handleLocalSources };

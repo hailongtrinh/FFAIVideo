@@ -25,7 +25,8 @@
     "test": "NODE_ENV=test jest",
     "clean": "rimraf ./examples/output",
     "example": "npm run clean && npm run build && node ./examples/simple",
-    "tts": "npm run clean && npm run build && node ./examples/azuretts"
+    "tts": "npm run clean && npm run build && node ./examples/azuretts",
+    "start": "npm run clean && npm run build && node ./examples/test"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",

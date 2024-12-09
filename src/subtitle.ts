@@ -1,4 +1,4 @@
-import { clone } from 'lodash';
+import { clone, trim, trimEnd } from 'lodash';
 import { SubMaker } from './sub-maker';
 import { subtitleFormatter } from './utils/date';
 import { TINY_PUNCTUATIONS } from './config/constant';
@@ -38,28 +38,49 @@ const generateSubtitle = async ({
   let subLine = '';
 
   let scriptLinesc;
-  
   if (lineSplit) {
-    scriptLinesc = restructureScriptLines(subMaker, subtitleMaxWidth);
+    //scriptLinesc = restructureScriptLines(subMaker, subtitleMaxWidth);
+    ////TODO : lineSplit from org scriptLines
+    const newScriptLines = [];
+    for(let cLine of scriptLines){
+      if(cLine.length > subtitleMaxWidth){
+      const words = cLine.split(' ');
+      let currentLine = '';
+      for (const word of words) {
+        if ((currentLine + word).length <= subtitleMaxWidth) {
+          currentLine += word + ' ';
+        } else {
+          newScriptLines.push(currentLine.trim());
+          currentLine = word + ' ';
+        }
+      }
+      if (currentLine.trim().length > 0) {
+        newScriptLines.push(currentLine.trim());
+      }
+      }else{
+        newScriptLines.push(cLine)
+      }
+    }
+    scriptLinesc = newScriptLines
+
   } else {
     scriptLinesc = clone(scriptLines);
   }
- 
-  console.log(scriptLinesc);
-  
 
   for (let i = 0; i < subMaker.offset.length; i++) {
     let [offset, sub] = [subMaker.offset[i], subMaker.subs[i]];
     const [starTime, enTime] = offset;
     if (startTime < 0) startTime = starTime;
     endTime = enTime;
-    subLine += safeDecodeURIComponent(sub);
+    //subLine += safeDecodeURIComponent(sub);
+    subLine += safeDecodeURIComponent(sub)+" ";
 
     // get equaled lineText
     let lineText = '';
     if (scriptLinesc.length > scriptLinesIndex) {
       const targetLine = scriptLinesc[scriptLinesIndex];
       lineText = getEqualedLine(targetLine, subLine);
+      //lineText = subLine;
     }
 
     // create new subtitle
@@ -96,7 +117,8 @@ const restructureScriptLines = (
   let oldSubLine = '';
 
   for (let i = 0; i < subMaker.offset.length; i++) {
-    const sub = subMaker.subs[i];
+    //const sub = subMaker.subs[i];
+    const sub = subMaker.subs[i]+" ";
     oldSubLine = subLine;
     subLine += sub;
 
@@ -113,9 +135,12 @@ const restructureScriptLines = (
     }
   }
 
+  
+
   if (subLine.length > 0) {
     scriptLinesc.push(subLine);
   }
+  
 
   return scriptLinesc;
 };
