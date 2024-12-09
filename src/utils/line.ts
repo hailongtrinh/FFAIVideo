@@ -1,27 +1,23 @@
 import { PUNCTUATIONS } from '../config/constant';
 import { removeSpecialCharacters } from './char';
 
-const isLineEqual = (lineText: string, subLine: string): boolean => {
-  if (subLine === lineText) {
-    return true;
-  }
-
-  const cleanedSubLine = removeSpecialCharacters(subLine);
-  const cleanedLine = removeSpecialCharacters(lineText);
-  if (cleanedSubLine === cleanedLine) {
-    return true;
-  }
-
-  return false;
-};
-
 // const scriptLines = ["Hello, world!", "This is a test."];
 // const scriptLinesIndex = 1;
 // const subLine = "This is a test!";
 // output: "This is a test"
-const getEqualedLine = (targetLine: string, subLine: string): string => {
-  if (subLine.trim() === targetLine.trim()) {
-    return targetLine.trim();
+const getEqualedLine = (
+  targetLine: string,
+  subLine: string,
+  isChinese: boolean,
+): string => {
+  if (isChinese) {
+    if (subLine === targetLine) {
+      return targetLine.trim();
+    }
+  } else {
+    if (subLine.trim() === targetLine.trim()) {
+      return targetLine.trim();
+    }
   }
  
   const cleanedSubLine = removeSpecialCharacters(subLine);
@@ -127,7 +123,6 @@ const addPunctuationToParagraph = (text: string) => {
 };
 
 export {
-  isLineEqual,
   getEqualedLine,
   normalizeWhitespace,
   cleanString,

@@ -27,14 +27,18 @@ const generateVideo = async (
     output = '',
     cacheDir = '',
     removeCache = true,
-    lineSplit = true,
+    lineBreakForce = true,
     addPunctuation = false,
+    isChinese = true,
+    genTTSAndSub = null,
     subtitleMaxWidth = 9999,
     localSources = false
   } = config;
 
   Root.currentConfig = config;
-  //videoScript = normalizeWhitespace(addPunctuationToParagraph(videoScript));
+  if (isChinese) {
+    videoScript = normalizeWhitespace(addPunctuationToParagraph(videoScript));
+  }
   if (addPunctuation) {
     videoScript = await addPunctuationWithAI(videoScript, config);
   }
@@ -70,23 +74,34 @@ const generateVideo = async (
 
   // Generate voiceover by tts engine.
   const audioFile = path.join(cacheDir, 'audio.mp3');
-  
-  const subMaker = await tts(videoScript, voiceName, audioFile, config);
-  
-  if (!subMaker) return '';
-  progress(30);
-
-  // Generate subtitles based on audio and text
-  const videoDuration = Math.ceil(getAudioDuration(subMaker) + lastTime);
-
   let subtitleFile = path.join(cacheDir, 'subtitle.srt');
-  await generateSubtitle({
-    subMaker,
-    videoScript,
-    subtitleFile,
-    subtitleMaxWidth,
-    lineSplit,
-  });
+  let videoDuration;
+  if (genTTSAndSub) {
+    videoDuration = await genTTSAndSub({
+      text: videoScript,
+      voiceName,
+      voiceFile: audioFile,
+      subtitleFile,
+      subtitleMaxWidth,
+      lineBreakForce,
+    });
+  } else {
+    const subMaker = await tts(videoScript, voiceName, audioFile, config);
+    if (!subMaker) return '';
+
+    progress(30);
+    // Generate subtitles based on audio and text
+    videoDuration = Math.ceil(getAudioDuration(subMaker) + lastTime);
+    await generateSubtitle({
+      subMaker,
+      videoScript,
+      subtitleFile,
+      subtitleMaxWidth,
+      lineBreakForce,
+      isChinese,
+    });
+  }
+
   if (!fs.exists(subtitleFile)) {
     Logger.warn('subtitle file not found, fallback to whisper');
   }

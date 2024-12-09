@@ -71,8 +71,9 @@ interface VideoConfig {
   bgMusic?: string;
   bgMusicVolume?: number; // Default is 0.2
   azureTTSSettings?: AzureTTSSettings;
-  lineSplit?: boolean;
+  lineBreakForce?: boolean;
   addPunctuation?: boolean;
+  isChinese?: boolean;
   perPage?: number;
 
   fontsDir?: string;
@@ -90,11 +91,26 @@ interface VideoConfig {
   materialAspectRatio?: boolean;
 
   getMaterial?: (param: SearchParams) => Promise<any[]>;
-  getTTS?: (
+  genTTS?: (
     text: string,
     voiceName: string,
     voiceFile: string,
   ) => Promise<Promise<ISubMaker | null>>;
+  genTTSAndSub?: ({
+    text,
+    voiceName,
+    voiceFile,
+    subtitleFile,
+    subtitleMaxWidth,
+    lineBreakForce,
+  }: {
+    text: string;
+    voiceName: string;
+    voiceFile: string;
+    subtitleFile: string;
+    subtitleMaxWidth: number;
+    lineBreakForce: boolean;
+  }) => Promise<number>;
   preProcessMaterialVideo?: (
     queryUrl: string,
     searchData: Record<string, any>,
@@ -121,7 +137,7 @@ const defalutVideoConfig: VideoConfig = {
   output: '',
   cacheDir: '',
   debug: false,
-  lineSplit: true,
+  lineBreakForce: true,
   addPunctuation: false,
   termsNum: 5,
   subtitleMaxWidth: 9999,
@@ -138,6 +154,7 @@ const defalutVideoConfig: VideoConfig = {
   strokeColor: '#000000',
   strokeWidth: 1,
   perPage: 20,
+  isChinese: true,
   removeCache: true,
 };
 
